@@ -1,0 +1,13 @@
+header {
+    color: #771479;
+    background-color: lightgray;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  body {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    line-height: 1;
+    color: #771479;
+  }
