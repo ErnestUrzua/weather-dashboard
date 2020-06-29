@@ -1,6 +1,6 @@
 header {
     color: #771479;
-    background-color: lightgray;
+    background-color: rgb(224, 224, 224);
     padding: 10px;
     text-align: center;
   }
@@ -10,4 +10,13 @@ header {
     font-size: 16px;
     line-height: 1;
     color: #771479;
+  }
+
+  #search {
+    padding:10px;
+    background-color: rgb(224, 224, 224);
+  }
+
+  #forecast {
+    background-color: lightsteelblue;
   }
