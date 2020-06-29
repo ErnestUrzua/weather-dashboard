@@ -4,13 +4,27 @@ Developers are often tasked with retrieving data from another application's API 
 
 Use the [OpenWeather API](https://openweathermap.org/api) to retrieve weather data for cities. The documentation includes a section called "How to start" that will provide basic setup and usage instructions. Use `localStorage` to store any persistent data.
 
-## User Story
 
-```
-AS A traveler
-I WANT to see the weather outlook for multiple cities
-SO THAT I can plan a trip accordingly
-```
+# software specifications
+- must use form inputs
+- searching for a city yields 
+    - current and future conditions
+- must maintain search history
+- must display
+    - city name
+    - the date
+    - icon representing weather conditions
+    - current temperature
+    - humidity
+    - wind speed
+    - UV index
+- UV index must indicate with color a 3 stage scale, for favorable, moderate, and severe
+- Future weather conditions must display
+    - 5 day weather forecast that displays the date
+    - an icon representing the weather condition
+    - temperature
+    - humidity
+- user must be able to click on previous city in history and see the page. 
 
 ## Acceptance Criteria
 
@@ -31,14 +45,3 @@ THEN I am again presented with current and future conditions for that city
 The following image demonstrates the application functionality:
 
 ![weather dashboard demo](./Assets/06-server-side-apis-homework-demo.png)
-
-## Review
-
-You are required to submit the following for review:
-
-* The URL of the deployed application.
-
-* The URL of the GitHub repository. Give the repository a unique name and include a README describing the project.
-
-- - -
-© 2019 Trilogy Education Services, a 2U, Inc. brand. All Rights Reserved.
