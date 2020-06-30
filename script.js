@@ -60,11 +60,37 @@ $(document).ready(function () {
  * takes API data (JSON/object) and turns it into elements on the page
  * @param {object} OpenWeatherData - object containing NYT API data
  */
-    //WORKS
+    //create dynamic divs to hold data
     function updatePage(OpenWeatherData) {
         // Log the openweatherdata to console, where it will show up as an object
         console.log(OpenWeatherData);
         console.log("------------------------------------");
+
+        //create the forecast div here
+        var cityName = OpenWeatherData.name;
+        var currentDate = OpenWeatherData.date;
+        var weatherIcon = OpenWeatherData.weather[0].icon;
+        var weatherDescription = OpenWeatherData.weather[0].description;
+        var icon = $("<img>");//create icon var
+        var iconUrl = "http://openweathermap.org/img/w/" + weatherIcon + ".png";
+
+        console.log(OpenWeatherData.name); //works
+        console.log(iconUrl);
+        console.log(weatherDescription);
+        $("#forecast").append("<h2>" + cityName + "</h2>"); //works
+        
+        $("#div").html("<img src = "url">");
+        $("#forecast").append(icon).text(weatherDescription);
+        //$("#forecast").attr('src', iconUrl);
+
+        
+        // ## append variables to the tRow element.then call this element to append to page
+        // tRow.append(title,year,response.Title));
+        
+    
+     
+        
+        
     }
 
     //UNTESTED
