@@ -12,14 +12,38 @@ header {
     color: #771479;
   }
 
-  #search {
+
+  #searchBar {
     padding:10px;
-    background-color: rgb(224, 224, 224);
   }
+
+  /* Style the search field */
+form input[type=text] {
+  padding: 10px;
+  font-size: 17px;
+  border: 1px solid lightgray;
+  float: left;
+  width: 80%;
+  background: #f1f1f1;
+}
+
+/* Style the submit button */
+form button {
+  
+  width: 20%;
+  padding: 10px;
+  background:  #771479;
+  color: white;
+  font-size: 17px;
+  border: 1px solid grey;
+  cursor: pointer;
+}
+
 
   #forecast {
     background-color: lightsteelblue;
     padding: 10px;
+    border-radius: 4px;
   }
 
   #weeklyForecast {

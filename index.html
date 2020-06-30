@@ -21,31 +21,36 @@
     <div class="row">
         <div id="searchArea" class="col-md-3">
             <!-- Here we create the text box for capturing the search term-->
-            <div id="searchBar">
-                <label for="search">Search a City:</label>
-                <input type="text submit" class="form-control" id="searchText">
-            </div>
+            <form>
+                <div id="searchBar">
+                    <input type="text submit" class="form-control" id="searchText" placeholder="Search for a city">
+                    <button id="search" type="submit"><i class="fa fa-search"></i></button>
+                </div>
+            </form>
         </div>
 
         <!-- area to populate the forecast -->
         <div id="forecast" class="col-md-8">
 
         </div>
-
+        <!-- area to populate the 5 day forecast -->
 
     </div>
 
-    <!-- area to populate the 5 day forecast -->
+    <!-- start of second row -->
     <div class="row">
-        <div id="weeklyForecast" class="col-md-8">
+        <div id="weeklyForecast" class="col-md-8 ">
+            <h3>Weekly Forecast</h3>
+            <!-- divs to hold days -->
+            <div id="1" class="col-md-3"></div>
+            <div id="2" class="col-md-3"></div>
+            <div id="3" class="col-md-3"></div>
+            <div id="4" class="col-md-3"></div>
+            <div id="5" class="col-md-3"></div>
         </div>
-        <!-- divs to hold days -->
-        <div id="1" class="col-md-3"></div>
-        <div id="2" class="col-md-3"></div>
-        <div id="3" class="col-md-3"></div>
-        <div id="4" class="col-md-3"></div>
-        <div id="5" class="col-md-3"></div>
     </div>
+
+
 
     <!-- script sources -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>

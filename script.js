@@ -1,6 +1,5 @@
 $(document).ready(function () {
 
-
     // function to clear the fields
     function clear() {
         $("#forecast").empty();
@@ -31,8 +30,8 @@ $(document).ready(function () {
         return queryURL + "q=" + queryText + "&units=imperial&" + $.param(queryParams);
     }
 
-     //
-     function buildQueryForecastURL() {
+    //not working
+    function buildQueryForecastURL() {
         // query is the url we'll use to query the API
         var queryForecastURL = "https://cors-anywhere.herokuapp.com/http://api.openweathermap.org/data/2.5/forecast/daily?";
         // Begin building an object to contain our API call's query parameters
@@ -50,27 +49,10 @@ $(document).ready(function () {
     }
 
 
-
-    function buildQueryUVIndex(lat, lon) {
-
-        var queryURL = "https://cors-anywhere.herokuapp.com/http://api.openweathermap.org/data/2.5/uvi?";
-        // Begin building an object to contain our API call's query parameters
-        // Set the API key
-        var queryParams = { "appid": "b2d4239aa3e819b8680cdea4c57fe90d" };
-
-        //var location = "&"+lat={lat}+"&"+lon={lon};
-
-        // Logging the URL so we have access to it for troubleshooting
-        console.log("---------------\nURL: " + queryURL + "\n---------------");
-        console.log(queryURL + "&" + $.param(queryParams));
-        return queryURL + "&" + $.param(queryParams) + location;
-
-    }
-
     //WORKS paritally
     // works on click but not on return or enter.
     //searchs the city typed in the box by pressing enter
-    $("#searchText").on("click", function (event) {
+    $("#search").on("click", ".fa-search", function (event) {
         // This line allows us to take advantage of the HTML "submit" property
         console.log(event);
         //prevents reloading of page by pressing enter
@@ -86,9 +68,17 @@ $(document).ready(function () {
         // Make the AJAX request to the API - GETs the JSON data at the queryURL.
         // The data then gets passed as an argument to the updatePage function
         $.ajax({
-            url: queryURL,queryForecastURL,
+            url: queryURL,
             method: "GET"
         }).then(updatePage);
+
+        // $.ajax({
+        //     url: queryForecastURL,
+        //     method: "GET"
+        // }).then(updatePage);
+
+
+
     });
 
 
@@ -98,11 +88,11 @@ $(document).ready(function () {
  * @param {object} FiveDayForecastData -object containg forecast
  */
     //create dynamic divs to hold data
-    function updatePage(OpenWeatherData,FiveDayForecastData) {
+    function updatePage(OpenWeatherData) {
         // Log the openweatherdata to console, where it will show up as an object
         console.log(OpenWeatherData);
         console.log("------------------------------------");
-        console.log(FiveDayForecastData);
+        //console.log(FiveDayForecastData);
         console.log("------------------------------------");
 
         //create the forecast div here
@@ -110,8 +100,9 @@ $(document).ready(function () {
         //time variables
         var currentDate = OpenWeatherData.date;
 
-        //location 
-        var lat = OpenWeatherData;
+        //location data
+        var lat = OpenWeatherData.coord.lat;
+        var lon = OpenWeatherData.coord.lon;
 
         //weather icon
         var weatherIcon = OpenWeatherData.weather[0].icon;
@@ -119,21 +110,24 @@ $(document).ready(function () {
         var temperature = OpenWeatherData.main.temp;
         var humidity = OpenWeatherData.main.humidity;
         var windSpeed = OpenWeatherData.wind.speed;
-        var uvIndex = OpenWeatherData; //TODO
+        // var uvIndex = OpenWeatherData; //TODO
 
 
 
         //test console
         console.log(OpenWeatherData.name); //works
-        console.log(iconUrl);
         console.log(weatherDescription);
-
+        //get UV index
+        // var uvIndexURL = buildQueryUVIndex(lat, lon);
+        // $.ajax({
+        //     url: "https://cors-anywhere.herokuapp.com/http://api.openweathermap.org/data/2.5/uvi?&" + "lat=" + lat + "&" + "lon=" + lon + "&appid=b2d4239aa3e819b8680cdea4c57fe90d",
+        //     method: "GET"
+        // })
 
         //update the time 
-        var currentTime = moment().format("dddd, MMMM Do YYYY, h:mm:ss a")
-        $("#forecast").append(currentTime)
+        var currentTime = moment().format("dddd, MMMM Do YYYY, h:mm a")
         //append city name to header
-        $("#forecast").append("<h2>" + cityName + "</h2>"); //works
+        $("#forecast").append("<h2>" + cityName + "</h2>", "<p>" + currentTime + "</p>"); //works
 
         // create icon img tag and link with icon from object
         var icon = $("<img>");//create icon var
@@ -145,12 +139,27 @@ $(document).ready(function () {
         $("#forecast").append("<p>Temperature: " + temperature + "</p>");
         $("#forecast").append("<p>Humidity: " + humidity + "</p>");
         $("#forecast").append("<p>Windspeed: " + windSpeed + "</p>");
-        $("#forecast").append("<p>UV Index: " + uvIndex + "</p>");
+        //$("#forecast").append("<p>UV Index: " + buildQueryUVIndex(lat, lon) + "</p>");
 
+        var queryForecastURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=current,minutely,hourly&appid=b2d4239aa3e819b8680cdea4c57fe90d";
+        console.log(queryForecastURL);
         //create the 5 day forecast
+        function forecast(){
+        $.ajax({
+                 url: "https://cors-anywhere.herokuapp.com/api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=current,minutely,hourly&appid=b2d4239aa3e819b8680cdea4c57fe90d",
+                 method: "GET"  
+             }).then(function (response) {
+                // console.log the response
+                console.log(response);
+            });
+                console.log(response.daily);
+            // response.forEach(element => {
+            //     var humidity = response.daily[element].humidity
+            //     $("#weeklyForecast").append("<p>" + humidity + "</p>")
+            // });
+        }
         
-
-
+            forecast();
     }
 
 
