@@ -8,7 +8,7 @@ $(document).ready(function () {
 
     /**
  * pulls information from the form and build the query URL
- * @returns {string} URL for NYT API based on form inputs
+ * @returns {string} URL for weather API based on form inputs
  */
 
     //WORKS
@@ -28,7 +28,42 @@ $(document).ready(function () {
         // Logging the URL so we have access to it for troubleshooting
         console.log("---------------\nURL: " + queryURL + "\n---------------");
         console.log(queryURL + "q=" + queryText + "&" + $.param(queryParams));
-        return queryURL + "q=" + queryText + "&units=imperial&"  + $.param(queryParams);
+        return queryURL + "q=" + queryText + "&units=imperial&" + $.param(queryParams);
+    }
+
+     //
+     function buildQueryForecastURL() {
+        // query is the url we'll use to query the API
+        var queryForecastURL = "https://cors-anywhere.herokuapp.com/http://api.openweathermap.org/data/2.5/forecast/daily?";
+        // Begin building an object to contain our API call's query parameters
+        // Set the API key
+        var queryParams = { "appid": "b2d4239aa3e819b8680cdea4c57fe90d" };
+
+        //queryURL.q = $("#searchText");
+
+        var queryText = $("#searchText")
+            .val().trim();
+
+        // Logging the URL so we have access to it for troubleshooting
+        console.log(queryForecastURL + "q=" + queryText + "&units=imperial&cnt=5&" + $.param(queryParams));
+        return queryForecastURL + "q=" + queryText + "&units=imperial&cnt=5&" + $.param(queryParams);
+    }
+
+
+
+    function buildQueryUVIndex(lat, lon) {
+
+        var queryURL = "https://cors-anywhere.herokuapp.com/http://api.openweathermap.org/data/2.5/uvi?";
+        // Begin building an object to contain our API call's query parameters
+        // Set the API key
+        var queryParams = { "appid": "b2d4239aa3e819b8680cdea4c57fe90d" };
+
+        //var location = "&"+lat={lat}+"&"+lon={lon};
+
+        // Logging the URL so we have access to it for troubleshooting
+        console.log("---------------\nURL: " + queryURL + "\n---------------");
+        console.log(queryURL + "&" + $.param(queryParams));
+        return queryURL + "&" + $.param(queryParams) + location;
 
     }
 
@@ -46,11 +81,12 @@ $(document).ready(function () {
 
         // Build the query URL for the ajax request to the Open weather API
         var queryURL = buildQueryURL();
+        var queryForecastURL = buildQueryForecastURL();
 
         // Make the AJAX request to the API - GETs the JSON data at the queryURL.
         // The data then gets passed as an argument to the updatePage function
         $.ajax({
-            url: queryURL,
+            url: queryURL,queryForecastURL,
             method: "GET"
         }).then(updatePage);
     });
@@ -58,20 +94,25 @@ $(document).ready(function () {
 
     /**
  * takes API data (JSON/object) and turns it into elements on the page
- * @param {object} OpenWeatherData - object containing NYT API data
+ * @param {object} OpenWeatherData - object containing weather API data
+ * @param {object} FiveDayForecastData -object containg forecast
  */
     //create dynamic divs to hold data
-    function updatePage(OpenWeatherData) {
+    function updatePage(OpenWeatherData,FiveDayForecastData) {
         // Log the openweatherdata to console, where it will show up as an object
         console.log(OpenWeatherData);
         console.log("------------------------------------");
+        console.log(FiveDayForecastData);
+        console.log("------------------------------------");
 
         //create the forecast div here
-        var cityName = OpenWeatherData.name; 
+        var cityName = OpenWeatherData.name;
         //time variables
         var currentDate = OpenWeatherData.date;
-        var dt = OpenWeatherData.dt;
-        var formattedTime = 0;
+
+        //location 
+        var lat = OpenWeatherData;
+
         //weather icon
         var weatherIcon = OpenWeatherData.weather[0].icon;
         var weatherDescription = OpenWeatherData.weather[0].description;
@@ -79,15 +120,14 @@ $(document).ready(function () {
         var humidity = OpenWeatherData.main.humidity;
         var windSpeed = OpenWeatherData.wind.speed;
         var uvIndex = OpenWeatherData; //TODO
-        
-        
+
+
+
         //test console
         console.log(OpenWeatherData.name); //works
         console.log(iconUrl);
         console.log(weatherDescription);
 
-        //get time from object, currently not in use
-        getTime(dt);
 
         //update the time 
         var currentTime = moment().format("dddd, MMMM Do YYYY, h:mm:ss a")
@@ -105,39 +145,14 @@ $(document).ready(function () {
         $("#forecast").append("<p>Temperature: " + temperature + "</p>");
         $("#forecast").append("<p>Humidity: " + humidity + "</p>");
         $("#forecast").append("<p>Windspeed: " + windSpeed + "</p>");
+        $("#forecast").append("<p>UV Index: " + uvIndex + "</p>");
 
-
-        //$("#forecast").attr('src', iconUrl);
-
-
-        // ## append variables to the tRow element.then call this element to append to page
-        // tRow.append(title,year,response.Title));
-
-
-
+        //create the 5 day forecast
+        
 
 
     }
 
-    //convert time from unix format to regular
-    function getTime(time) {
-
-        // Create a new JavaScript Date object based on the timestamp
-        // multiplied by 1000 so that the argument is in milliseconds, not seconds.
-        var date = new Date(time * 1000);
-        // Hours part from the timestamp
-        var hours = date.getHours();
-        // Minutes part from the timestamp
-        var minutes = "0" + date.getMinutes();
-        // Seconds part from the timestamp
-        var seconds = "0" + date.getSeconds();
-
-        // Will display time in 10:30:23 format
-        formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
-
-        console.log(formattedTime);
-
-    }
 
     //UNTESTED
     //  .on("click") function associated with the clear button
