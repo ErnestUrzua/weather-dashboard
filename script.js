@@ -71,26 +71,56 @@ $(document).ready(function () {
         var currentDate = OpenWeatherData.date;
         var weatherIcon = OpenWeatherData.weather[0].icon;
         var weatherDescription = OpenWeatherData.weather[0].description;
+        var dt = OpenWeatherData.dt;
+        var formattedTime = 0;
         var icon = $("<img>");//create icon var
         var iconUrl = "http://openweathermap.org/img/w/" + weatherIcon + ".png";
 
         console.log(OpenWeatherData.name); //works
         console.log(iconUrl);
         console.log(weatherDescription);
+        getTime(dt);
         $("#forecast").append("<h2>" + cityName + "</h2>"); //works
-        
-        $("#div").html("<img src = "url">");
-        $("#forecast").append(icon).text(weatherDescription);
+
+        icon.attr("src", iconUrl); //set src attribute for icon
+        icon.text(weatherDescription);
+        $("#forecast").append(icon);
+
+        //update the time 
+        var currentTime = moment().format("dddd, MMMM Do YYYY, h:mm:ss a")
+        $("#forecast").append(currentTime)
+
+
         //$("#forecast").attr('src', iconUrl);
 
-        
+
         // ## append variables to the tRow element.then call this element to append to page
         // tRow.append(title,year,response.Title));
-        
-    
-     
-        
-        
+
+
+
+
+
+    }
+
+    //convert time from unix format to regular
+    function getTime(time) {
+
+        // Create a new JavaScript Date object based on the timestamp
+        // multiplied by 1000 so that the argument is in milliseconds, not seconds.
+        var date = new Date(time * 1000);
+        // Hours part from the timestamp
+        var hours = date.getHours();
+        // Minutes part from the timestamp
+        var minutes = "0" + date.getMinutes();
+        // Seconds part from the timestamp
+        var seconds = "0" + date.getSeconds();
+
+        // Will display time in 10:30:23 format
+        formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+
+        console.log(formattedTime);
+
     }
 
     //UNTESTED
