@@ -28,7 +28,7 @@ $(document).ready(function () {
         // Logging the URL so we have access to it for troubleshooting
         console.log("---------------\nURL: " + queryURL + "\n---------------");
         console.log(queryURL + "q=" + queryText + "&" + $.param(queryParams));
-        return queryURL + "q=" + queryText + "&" + $.param(queryParams);
+        return queryURL + "q=" + queryText + "&units=imperial&"  + $.param(queryParams);
 
     }
 
@@ -67,28 +67,44 @@ $(document).ready(function () {
         console.log("------------------------------------");
 
         //create the forecast div here
-        var cityName = OpenWeatherData.name;
+        var cityName = OpenWeatherData.name; 
+        //time variables
         var currentDate = OpenWeatherData.date;
-        var weatherIcon = OpenWeatherData.weather[0].icon;
-        var weatherDescription = OpenWeatherData.weather[0].description;
         var dt = OpenWeatherData.dt;
         var formattedTime = 0;
-        var icon = $("<img>");//create icon var
-        var iconUrl = "http://openweathermap.org/img/w/" + weatherIcon + ".png";
-
+        //weather icon
+        var weatherIcon = OpenWeatherData.weather[0].icon;
+        var weatherDescription = OpenWeatherData.weather[0].description;
+        var temperature = OpenWeatherData.main.temp;
+        var humidity = OpenWeatherData.main.humidity;
+        var windSpeed = OpenWeatherData.wind.speed;
+        var uvIndex = OpenWeatherData; //TODO
+        
+        
+        //test console
         console.log(OpenWeatherData.name); //works
         console.log(iconUrl);
         console.log(weatherDescription);
-        getTime(dt);
-        $("#forecast").append("<h2>" + cityName + "</h2>"); //works
 
-        icon.attr("src", iconUrl); //set src attribute for icon
-        icon.text(weatherDescription);
-        $("#forecast").append(icon);
+        //get time from object, currently not in use
+        getTime(dt);
 
         //update the time 
         var currentTime = moment().format("dddd, MMMM Do YYYY, h:mm:ss a")
         $("#forecast").append(currentTime)
+        //append city name to header
+        $("#forecast").append("<h2>" + cityName + "</h2>"); //works
+
+        // create icon img tag and link with icon from object
+        var icon = $("<img>");//create icon var
+        var iconUrl = "http://openweathermap.org/img/w/" + weatherIcon + ".png";
+        icon.attr("src", iconUrl); //set src attribute for icon
+        $("#forecast").append("<p>Conditions: " + weatherDescription + "</p>");
+        $("#forecast").append(icon);
+
+        $("#forecast").append("<p>Temperature: " + temperature + "</p>");
+        $("#forecast").append("<p>Humidity: " + humidity + "</p>");
+        $("#forecast").append("<p>Windspeed: " + windSpeed + "</p>");
 
 
         //$("#forecast").attr('src', iconUrl);
