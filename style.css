@@ -14,6 +14,7 @@ header {
 
   #searchBar {
     padding:10px;
+    width: 75%;
   }
 
   /* Style the search field */
@@ -22,7 +23,7 @@ form input[type=text] {
   font-size: 17px;
   border: 1px solid lightgray;
   float: left;
-  width: 80%;
+  width: 60%;
   background: #f1f1f1;
 }
 
@@ -47,9 +48,15 @@ form button {
   #weeklyForecast {
     background-color: lightsteelblue;
     padding: 10px;
+    margin: 10px;
     border-radius: 4px;
     text-align: left;
   
+  }
+
+  .card {
+    padding:5px;
+    margin: 10px;
   }
 
   

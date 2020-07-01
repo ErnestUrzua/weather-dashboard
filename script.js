@@ -3,6 +3,7 @@ $(document).ready(function () {
     // function to clear the fields
     function clear() {
         $("#forecast").empty();
+        $("#weeklyForecast").empty();
     }
 
     /**
@@ -30,7 +31,7 @@ $(document).ready(function () {
         return queryURL + "q=" + queryText + "&units=imperial&" + $.param(queryParams);
     }
 
-    //not working
+    //not in use
     function buildQueryForecastURL() {
         // query is the url we'll use to query the API
         var queryForecastURL = "https://cors-anywhere.herokuapp.com/http://api.openweathermap.org/data/2.5/forecast?";
@@ -48,7 +49,7 @@ $(document).ready(function () {
         return queryForecastURL + "q=" + queryText + "&units=imperial&cnt=5&" + $.param(queryParams);
     }
 
-    //WORKS paritally
+    //WORKS 
     // works on click but not on return or enter.
     //searchs the city typed in the box by pressing enter
     $("#search").on("click", ".fa-search", function (event) {
@@ -71,10 +72,6 @@ $(document).ready(function () {
             method: "GET"
         }).then(updatePage);
 
-        // $.ajax({
-        //     url: queryForecastURL,
-        //     method: "GET"
-        // }).then(updatePage);
     });
 
 
@@ -145,6 +142,8 @@ $(document).ready(function () {
         console.log(queryForecastURL);
         //create the 5 day forecast
 
+
+        //Works
         function forecast() {
             $.ajax({
                 url: "https://cors-anywhere.herokuapp.com/api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=current,minutely,hourly&units=imperial&cnt=5&appid=b2d4239aa3e819b8680cdea4c57fe90d",
@@ -158,13 +157,13 @@ $(document).ready(function () {
                 console.log(response.daily);
 
                 // append title weekly forecast
-                var h3 = $("<span><h3>Weekly Forecast</h3></span>").addClass("row col-md-8");
+                var h3 = $("<h3>Weekly Forecast</h3>").addClass("row col-md-12");
 
                 $("#weeklyForecast").append(h3);
 
-                
-                    // run 5 times for forecast
-                    for (var i = 0;i<5;i++) {
+
+                // run 5 times for forecast
+                for (var i = 0; i < 5; i++) {
 
                     console.log(response.daily[i].humidity);
                     var humidity = response.daily[i].humidity
@@ -172,25 +171,23 @@ $(document).ready(function () {
                     var date = new Date(response.daily[i].dt).toLocaleDateString();
                     var weatherIcon = response.daily[i].weather[0].icon;
                     console.log("humidity" + humidity);
+
                     // create icon img tag and link with icon from object
                     var icon = $("<img>");//create icon var
                     var iconUrl = "http://openweathermap.org/img/w/" + weatherIcon + ".png";
-                     
                     icon.attr("src", iconUrl); //set src attribute for icon
                     icon.attr("width", "50px");
                     icon.attr("height", "50px");
-                   
 
-
-                    var card = $("<div>").addClass("card bg-primary text-white col-md-3");
+                    //create the cards that hold the daily forecasts
+                    var card = $("<div>").addClass("card bg-primary text-white col-md-2");
                     var p1 = $("<p>").addClass("card-text").text(date);
                     var p2 = $("<p>").addClass("card-text").text("Temp: " + temp + " °F");
                     var p3 = $("<p>").addClass("card-text").text("Humidity: " + humidity + " %");
-
                     $("#weeklyForecast ").append(card.append(p1, icon, p2, p3));
 
-                    }
-                
+                }
+
 
             });
         }
@@ -198,11 +195,8 @@ $(document).ready(function () {
         forecast();
     }
 
-
-
-
     //UNTESTED
-    //  .on("click") function associated with the clear button
-    $("#forecast").on("click", clear);
+    // when clicking search button, use clear function
+    $("#search").on("click", clear);
 
 });
