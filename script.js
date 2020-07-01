@@ -62,7 +62,7 @@ $(document).ready(function () {
 
         // Build the query URL for the ajax request to the Open weather API
         var queryURL = buildQueryURL();
-        var queryForecastURL = buildQueryForecastURL();
+        //var queryForecastURL = buildQueryForecastURL();
 
         // Make the AJAX request to the API - GETs the JSON data at the queryURL.
         // The data then gets passed as an argument to the updatePage function
@@ -75,9 +75,6 @@ $(document).ready(function () {
         //     url: queryForecastURL,
         //     method: "GET"
         // }).then(updatePage);
-
-
-
     });
 
 
@@ -150,13 +147,14 @@ $(document).ready(function () {
 
         function forecast() {
             $.ajax({
-                url: "https://cors-anywhere.herokuapp.com/api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=current,minutely,hourly&appid=b2d4239aa3e819b8680cdea4c57fe90d",
+                url: "https://cors-anywhere.herokuapp.com/api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=current,minutely,hourly&units=imperial&cnt=5&appid=b2d4239aa3e819b8680cdea4c57fe90d",
                 method: "GET"
             }).then(function (response) {
                 // console.log the response
                 console.log("5 day forecast ");
                 console.log(response);
 
+                console.log("resonse daily");
                 console.log(response.daily);
 
                 // append title weekly forecast
@@ -164,28 +162,35 @@ $(document).ready(function () {
 
                 $("#weeklyForecast").append(h3);
 
-                response.daily.forEach(element => {
-                    console.log(element);
-                    var humidity = element.humidity
-                    var temp = element.temp.day;
-                    var date = new Date(element.dt).toLocaleDateString();
-                    var weatherIcon = element.weather[0].icon;
+                
+                    // run 5 times for forecast
+                    for (var i = 0;i<5;i++) {
+
+                    console.log(response.daily[i].humidity);
+                    var humidity = response.daily[i].humidity
+                    var temp = response.daily[i].temp.day;
+                    var date = new Date(response.daily[i].dt).toLocaleDateString();
+                    var weatherIcon = response.daily[i].weather[0].icon;
                     console.log("humidity" + humidity);
                     // create icon img tag and link with icon from object
                     var icon = $("<img>");//create icon var
                     var iconUrl = "http://openweathermap.org/img/w/" + weatherIcon + ".png";
+                     
                     icon.attr("src", iconUrl); //set src attribute for icon
+                    icon.attr("width", "50px");
+                    icon.attr("height", "50px");
+                   
 
 
-                    var card = $("<div>").addClass("card bg-primary text-white col-md-2");
+                    var card = $("<div>").addClass("card bg-primary text-white col-md-3");
                     var p1 = $("<p>").addClass("card-text").text(date);
                     var p2 = $("<p>").addClass("card-text").text("Temp: " + temp + " °F");
                     var p3 = $("<p>").addClass("card-text").text("Humidity: " + humidity + " %");
 
                     $("#weeklyForecast ").append(card.append(p1, icon, p2, p3));
 
-
-                });
+                    }
+                
 
             });
         }
