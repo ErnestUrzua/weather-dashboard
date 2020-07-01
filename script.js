@@ -48,7 +48,6 @@ $(document).ready(function () {
         return queryForecastURL + "q=" + queryText + "&units=imperial&cnt=5&" + $.param(queryParams);
     }
 
-
     //WORKS paritally
     // works on click but not on return or enter.
     //searchs the city typed in the box by pressing enter
@@ -159,23 +158,33 @@ $(document).ready(function () {
                 console.log(response);
 
                 console.log(response.daily);
-                
+
+                // append title weekly forecast
+                var h3 = $("<span><h3>Weekly Forecast</h3></span>").addClass("row col-md-8");
+
+                $("#weeklyForecast").append(h3);
+
                 response.daily.forEach(element => {
                     console.log(element);
                     var humidity = element.humidity
                     var temp = element.temp.day;
                     var date = new Date(element.dt).toLocaleDateString();
+                    var weatherIcon = element.weather[0].icon;
                     console.log("humidity" + humidity);
+                    // create icon img tag and link with icon from object
+                    var icon = $("<img>");//create icon var
+                    var iconUrl = "http://openweathermap.org/img/w/" + weatherIcon + ".png";
+                    icon.attr("src", iconUrl); //set src attribute for icon
 
-                   
-                    
+
                     var card = $("<div>").addClass("card bg-primary text-white col-md-2");
                     var p1 = $("<p>").addClass("card-text").text(date);
                     var p2 = $("<p>").addClass("card-text").text("Temp: " + temp + " °F");
                     var p3 = $("<p>").addClass("card-text").text("Humidity: " + humidity + " %");
 
-                    $("#weeklyForecast ").append(card.append(p1, p2, p3));
-                  
+                    $("#weeklyForecast ").append(card.append(p1, icon, p2, p3));
+
+
                 });
 
             });

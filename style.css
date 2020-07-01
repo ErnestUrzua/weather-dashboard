@@ -12,7 +12,6 @@ header {
     color: #771479;
   }
 
-
   #searchBar {
     padding:10px;
   }
@@ -47,4 +46,9 @@ form button {
 
   #weeklyForecast {
     background-color: lightsteelblue;
+    padding: 10px;
+    border-radius: 4px;
+  
   }
+
+  
