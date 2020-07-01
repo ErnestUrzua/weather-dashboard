@@ -19,7 +19,7 @@ $(document).ready(function () {
         // Set the API key
         var queryParams = { "appid": "b2d4239aa3e819b8680cdea4c57fe90d" };
 
-        queryURL.q = $("#searchText");
+        //queryURL.q = $("#searchText");
 
         var queryText = $("#searchText")
             .val().trim();
@@ -33,7 +33,7 @@ $(document).ready(function () {
     //not working
     function buildQueryForecastURL() {
         // query is the url we'll use to query the API
-        var queryForecastURL = "https://cors-anywhere.herokuapp.com/http://api.openweathermap.org/data/2.5/forecast/daily?";
+        var queryForecastURL = "https://cors-anywhere.herokuapp.com/http://api.openweathermap.org/data/2.5/forecast?";
         // Begin building an object to contain our API call's query parameters
         // Set the API key
         var queryParams = { "appid": "b2d4239aa3e819b8680cdea4c57fe90d" };
@@ -90,6 +90,7 @@ $(document).ready(function () {
     //create dynamic divs to hold data
     function updatePage(OpenWeatherData) {
         // Log the openweatherdata to console, where it will show up as an object
+
         console.log(OpenWeatherData);
         console.log("------------------------------------");
         //console.log(FiveDayForecastData);
@@ -98,7 +99,10 @@ $(document).ready(function () {
         //create the forecast div here
         var cityName = OpenWeatherData.name;
         //time variables
-        var currentDate = OpenWeatherData.date;
+        var currentDate = new Date(OpenWeatherData.dt).toLocaleDateString();
+
+        console.log(currentDate);
+
 
         //location data
         var lat = OpenWeatherData.coord.lat;
@@ -144,23 +148,43 @@ $(document).ready(function () {
         var queryForecastURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=current,minutely,hourly&appid=b2d4239aa3e819b8680cdea4c57fe90d";
         console.log(queryForecastURL);
         //create the 5 day forecast
-        function forecast(){
-        $.ajax({
-                 url: "https://cors-anywhere.herokuapp.com/api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=current,minutely,hourly&appid=b2d4239aa3e819b8680cdea4c57fe90d",
-                 method: "GET"  
-             }).then(function (response) {
+
+        function forecast() {
+            $.ajax({
+                url: "https://cors-anywhere.herokuapp.com/api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=current,minutely,hourly&appid=b2d4239aa3e819b8680cdea4c57fe90d",
+                method: "GET"
+            }).then(function (response) {
                 // console.log the response
+                console.log("5 day forecast ");
                 console.log(response);
-            });
+
                 console.log(response.daily);
-            // response.forEach(element => {
-            //     var humidity = response.daily[element].humidity
-            //     $("#weeklyForecast").append("<p>" + humidity + "</p>")
-            // });
+                
+                response.daily.forEach(element => {
+                    console.log(element);
+                    var humidity = element.humidity
+                    var temp = element.temp.day;
+                    var date = new Date(element.dt).toLocaleDateString();
+                    console.log("humidity" + humidity);
+
+                   
+                    
+                    var card = $("<div>").addClass("card bg-primary text-white col-md-2");
+                    var p1 = $("<p>").addClass("card-text").text(date);
+                    var p2 = $("<p>").addClass("card-text").text("Temp: " + temp + " °F");
+                    var p3 = $("<p>").addClass("card-text").text("Humidity: " + humidity + " %");
+
+                    $("#weeklyForecast ").append(card.append(p1, p2, p3));
+                  
+                });
+
+            });
         }
-        
-            forecast();
+
+        forecast();
     }
+
+
 
 
     //UNTESTED

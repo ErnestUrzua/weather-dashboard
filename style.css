@@ -19,7 +19,7 @@ header {
 
   /* Style the search field */
 form input[type=text] {
-  padding: 10px;
+  /* padding: 10px; */
   font-size: 17px;
   border: 1px solid lightgray;
   float: left;
@@ -29,9 +29,8 @@ form input[type=text] {
 
 /* Style the submit button */
 form button {
-  
   width: 20%;
-  padding: 10px;
+  padding: 10px; 
   background:  #771479;
   color: white;
   font-size: 17px;
