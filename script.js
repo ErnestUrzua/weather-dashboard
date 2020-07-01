@@ -1,5 +1,5 @@
 $(document).ready(function () {
-
+    //Works
     // function to clear the fields
     function clear() {
         $("#forecast").empty();
@@ -50,8 +50,6 @@ $(document).ready(function () {
     }
 
     //WORKS 
-    // works on click but not on return or enter.
-    //searchs the city typed in the box by pressing enter
     $("#search").on("click", ".fa-search", function (event) {
         // This line allows us to take advantage of the HTML "submit" property
         console.log(event);
@@ -91,9 +89,9 @@ $(document).ready(function () {
 
         //create the forecast div here
         var cityName = OpenWeatherData.name;
+        
         //time variables
         var currentDate = new Date(OpenWeatherData.dt).toLocaleDateString();
-
         console.log(currentDate);
 
 
@@ -140,6 +138,7 @@ $(document).ready(function () {
 
         var queryForecastURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=current,minutely,hourly&appid=b2d4239aa3e819b8680cdea4c57fe90d";
         console.log(queryForecastURL);
+        
         //create the 5 day forecast
 
 
