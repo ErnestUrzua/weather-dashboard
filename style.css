@@ -17,6 +17,10 @@ header {
     width: 75%;
   }
 
+  #searchArea {
+    margin:5px;
+  }
+
   /* Style the search field */
 form input[type=text] {
   /* padding: 10px; */

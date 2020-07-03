@@ -25,13 +25,18 @@ $(document).ready(function () {
         var queryText = $("#searchText")
             .val().trim();
 
+        // put search history on side
+       var listItem= $("<li>").addClass("list-group-item").text(queryText);
+        $(".list-group").append(listItem);
+       
+
         // Logging the URL so we have access to it for troubleshooting
         console.log("---------------\nURL: " + queryURL + "\n---------------");
         console.log(queryURL + "q=" + queryText + "&" + $.param(queryParams));
         return queryURL + "q=" + queryText + "&units=imperial&" + $.param(queryParams);
     }
 
-    //not in use
+    //get the uv index value based off lat and lon of the city searched
     function buildQueryUVIndexURL(lat,lon) {
         // query is the url we'll use to query the API
         var queryUVIndexURL = "http://api.openweathermap.org/data/2.5/uvi?";
@@ -39,9 +44,6 @@ $(document).ready(function () {
         // Set the API key
         var queryParams = { "appid": "b2d4239aa3e819b8680cdea4c57fe90d" };
 
-       
-
-        // Logging the URL so we have access to it for troubleshooting
         console.log(queryUVIndexURL + "lat=" + lat + "&" + "lon=" + lon  + "&" + $.param(queryParams));
         return (queryUVIndexURL + "lat=" + lat + "&" + "lon=" + lon  + "&" + $.param(queryParams));
   
@@ -175,6 +177,7 @@ $(document).ready(function () {
                 // append title weekly forecast
                 var h3 = $("<h3>Weekly Forecast</h3>").addClass("row col-md-12");
 
+                // change the bg color
                 $("#weeklyForecast").append(h3);
                 $("#weeklyForecast").attr("style","background-color: lightsteelblue;")
 
@@ -204,15 +207,13 @@ $(document).ready(function () {
                     $("#weeklyForecast ").append(card.append(p1, icon, p2, p3));
 
                 }
-
-
             });
         }
 
         forecast();
     }
 
-    //UNTESTED
+    
     // when clicking search button, use clear function
     $("#search").on("click", clear);
 
