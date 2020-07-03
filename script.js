@@ -32,21 +32,19 @@ $(document).ready(function () {
     }
 
     //not in use
-    function buildQueryForecastURL() {
+    function buildQueryUVIndexURL(lat,lon) {
         // query is the url we'll use to query the API
-        var queryForecastURL = "https://cors-anywhere.herokuapp.com/http://api.openweathermap.org/data/2.5/forecast?";
+        var queryUVIndexURL = "http://api.openweathermap.org/data/2.5/uvi?";
         // Begin building an object to contain our API call's query parameters
         // Set the API key
         var queryParams = { "appid": "b2d4239aa3e819b8680cdea4c57fe90d" };
 
-        //queryURL.q = $("#searchText");
-
-        var queryText = $("#searchText")
-            .val().trim();
+       
 
         // Logging the URL so we have access to it for troubleshooting
-        console.log(queryForecastURL + "q=" + queryText + "&units=imperial&cnt=5&" + $.param(queryParams));
-        return queryForecastURL + "q=" + queryText + "&units=imperial&cnt=5&" + $.param(queryParams);
+        console.log(queryUVIndexURL + "lat=" + lat + "&" + "lon=" + lon  + "&" + $.param(queryParams));
+        return (queryUVIndexURL + "lat=" + lat + "&" + "lon=" + lon  + "&" + $.param(queryParams));
+  
     }
 
     //WORKS 
@@ -105,36 +103,55 @@ $(document).ready(function () {
         var temperature = OpenWeatherData.main.temp;
         var humidity = OpenWeatherData.main.humidity;
         var windSpeed = OpenWeatherData.wind.speed;
-        // var uvIndex = OpenWeatherData; //TODO
+        var uvIndex ;
 
-
+        
 
         //test console
         console.log(OpenWeatherData.name); //works
         console.log(weatherDescription);
-        //get UV index
-        // var uvIndexURL = buildQueryUVIndex(lat, lon);
-        // $.ajax({
-        //     url: "https://cors-anywhere.herokuapp.com/http://api.openweathermap.org/data/2.5/uvi?&" + "lat=" + lat + "&" + "lon=" + lon + "&appid=b2d4239aa3e819b8680cdea4c57fe90d",
-        //     method: "GET"
-        // })
-
+        
+        console.log("UV DAta " + uvIndex);
         //update the time 
         var currentTime = moment().format("dddd, MMMM Do YYYY, h:mm a")
         //append city name to header
         $("#forecast").append("<h2>" + cityName + "</h2>", "<p>" + currentTime + "</p>"); //works
-
+        $("#forecast").attr("style", "background-color: lightsteelblue;");
         // create icon img tag and link with icon from object
         var icon = $("<img>");//create icon var
         var iconUrl = "http://openweathermap.org/img/w/" + weatherIcon + ".png";
         icon.attr("src", iconUrl); //set src attribute for icon
+
         $("#forecast").append("<p>Conditions: " + weatherDescription + "</p>");
         $("#forecast").append(icon);
 
         $("#forecast").append("<p>Temperature: " + temperature + "</p>");
         $("#forecast").append("<p>Humidity: " + humidity + "</p>");
         $("#forecast").append("<p>Windspeed: " + windSpeed + "</p>");
-        //$("#forecast").append("<p>UV Index: " + buildQueryUVIndex(lat, lon) + "</p>");
+        // get UV index
+        var uvIndexURL = buildQueryUVIndexURL(lat, lon);
+        $.ajax({
+            url: uvIndexURL,
+            method: "GET"
+        }).then (function (UVdata){
+            console.log(UVdata);
+            uvIndex = UVdata.value;
+            var ptag = $("<p>").text("UV Index: ");
+            var UVbutton = $("<span>").addClass("btn").text(uvIndex);
+            if (uvIndex < 3 ) {
+                UVbutton.addClass("btn-success")
+            }
+            else if (uvIndex < 7) {
+                UVbutton.addClass("btn-warning");
+            }
+
+            else {
+                UVbutton.addClass("btn-danger");
+            }
+
+            $("#forecast").append(ptag.append(UVbutton));
+        });
+        
 
         var queryForecastURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=current,minutely,hourly&appid=b2d4239aa3e819b8680cdea4c57fe90d";
         console.log(queryForecastURL);
@@ -159,6 +176,7 @@ $(document).ready(function () {
                 var h3 = $("<h3>Weekly Forecast</h3>").addClass("row col-md-12");
 
                 $("#weeklyForecast").append(h3);
+                $("#weeklyForecast").attr("style","background-color: lightsteelblue;")
 
 
                 // run 5 times for forecast
@@ -167,7 +185,7 @@ $(document).ready(function () {
                     console.log(response.daily[i].humidity);
                     var humidity = response.daily[i].humidity
                     var temp = response.daily[i].temp.day;
-                    var date = new Date(response.daily[i].dt).toLocaleDateString();
+                    var date = moment.unix(response.daily[i].dt).format('YYYY-MM-DD');
                     var weatherIcon = response.daily[i].weather[0].icon;
                     console.log("humidity" + humidity);
 
