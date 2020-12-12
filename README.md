@@ -27,5 +27,5 @@ Developers are often tasked with retrieving data from another application's API 
 
 The following image demonstrates the application functionality:
 
-![Screenshot](./Assets/06-server-side-apis-homework-demo.png)
+![Screenshot](./assets/06-server-side-apis-homework-demo.png)
 [Live application page](https://ernesturzua.github.io/weather-dashboard/)
