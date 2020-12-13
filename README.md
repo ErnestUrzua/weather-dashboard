@@ -23,9 +23,12 @@ Developers are often tasked with retrieving data from another application's API 
     - humidity
 - user must be able to click on previous city in history and see the page. 
 
-## Acceptance Criteria
+## Technologies 
+- https://openweathermap.org/api
+- Javascript
+- CSS
 
-The following image demonstrates the application functionality:
+## Application Demo
 
-![Screenshot](./assets/06-server-side-apis-homework-demo.png)
+![Screenshot](./assets/weatherDashboardss1.png)
 [Live application page](https://ernesturzua.github.io/weather-dashboard/)
