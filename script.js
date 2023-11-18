@@ -14,7 +14,8 @@ $(document).ready(function () {
     //WORKS
     function buildQueryURL() {
         // queryURL is the url we'll use to query the API
-        var queryURL = "https://cors-anywhere.herokuapp.com/http://api.openweathermap.org/data/2.5/weather?";
+        var queryURL = "https://corsproxy.io/?http://api.openweathermap.org/data/2.5/weather?";
+        //https://corsproxy.io/?http://api.openweathermap.org/data/2.5/weather?q=los%20angeles&appid=b2d4239aa3e819b8680cdea4c57fe90d
         //http://api.openweathermap.org/data/2.5/weather?q=los%20angeles&appid=b2d4239aa3e819b8680cdea4c57fe90d
         // Begin building an object to contain our API call's query parameters
         // Set the API key
@@ -164,7 +165,7 @@ $(document).ready(function () {
         //Works
         function forecast() {
             $.ajax({
-                url: "https://cors-anywhere.herokuapp.com/api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=current,minutely,hourly&units=imperial&cnt=5&appid=b2d4239aa3e819b8680cdea4c57fe90d",
+                url: "https://corsproxy.io/?'api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=current,minutely,hourly&units=imperial&cnt=5&appid=b2d4239aa3e819b8680cdea4c57fe90d",
                 method: "GET"
             }).then(function (response) {
                 // console.log the response
