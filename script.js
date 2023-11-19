@@ -73,6 +73,29 @@ $(document).ready(function () {
 
     });
 
+     //use the enter key to input event
+     $("#searchText").on("keypress", function (event) {
+        if (event.keyCode === 13) {
+            
+        // This line allows us to take advantage of the HTML "submit" property
+        console.log(event);
+        event.preventDefault();
+        // clear the forecast area to populate a new one
+        clear();
+
+        // Build the query URL for the ajax request to the Open weather API
+        var queryURL = buildQueryURL();
+        //var queryForecastURL = buildQueryForecastURL();
+
+        // Make the AJAX request to the API - GETs the JSON data at the queryURL.
+        // The data then gets passed as an argument to the updatePage function
+        $.ajax({
+            url: queryURL,
+            method: "GET"
+        }).then(updatePage);
+        }
+    });
+
 
     /**
  * takes API data (JSON/object) and turns it into elements on the page
