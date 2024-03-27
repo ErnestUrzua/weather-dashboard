@@ -1,17 +1,43 @@
 $(document).ready(function () {
-    //Works
+
+    // //get default users location
+    var location = navigator.geolocation.getCurrentPosition(success);
+    console.log(location);
+
+    //get geolocation and update page
+    function success(pos) {
+        const loc = pos.coords;
+
+        console.log("Your current position is:");
+        console.log(`Latitude : ${loc.latitude}`);
+        console.log(`Longitude: ${loc.longitude}`);
+        console.log(`More or less ${loc.accuracy} meters.`);
+
+        var queryURL = buildQueryURLPOS(loc.latitude,loc.longitude);
+        
+        // Make the AJAX request to the API - GETs the JSON data at the queryURL.
+            // The data then gets passed as an argument to the updatePage function
+            $.ajax({
+                url: queryURL,
+                method: "GET"
+            }).then(updatePage);
+    }
+
     // function to clear the fields
     function clear() {
         $("#forecast").empty();
-        $("#weeklyForecast").empty();
+        $("#weeklyForecast").empty();                           
+        console.log('clearing fields')
     }
+
+
 
     /**
  * pulls information from the form and build the query URL
  * @returns {string} URL for weather API based on form inputs
  */
 
-    //WORKS
+    //WORKS for any input of string data
     function buildQueryURL() {
         // queryURL is the url we'll use to query the API
         var queryURL = "https://corsproxy.io/?http://api.openweathermap.org/data/2.5/weather?";
@@ -23,13 +49,14 @@ $(document).ready(function () {
 
         //queryURL.q = $("#searchText");
 
+        //take the input of the search bar
         var queryText = $("#searchText")
             .val().trim();
 
         // put search history on side
-       var listItem= $("<li>").addClass("list-group-item").text(queryText);
+        var listItem = $("<li>").addClass("list-group-item").text(queryText);
         $(".list-group").append(listItem);
-       
+
 
         // Logging the URL so we have access to it for troubleshooting
         console.log("---------------\nURL: " + queryURL + "\n---------------");
@@ -37,23 +64,39 @@ $(document).ready(function () {
         return queryURL + "q=" + queryText + "&units=imperial&" + $.param(queryParams);
     }
 
+    //builds a query url based off the lat and lon, used for users default location when script starts
+    function buildQueryURLPOS(lat,lon){
+        //https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}
+        
+        var queryURL = "https://corsproxy.io/?http://api.openweathermap.org/data/2.5/weather?";
+        
+        // Begin building an object to contain our API call's query parameters
+        // Set the API key
+        var queryParams = { "appid": "b2d4239aa3e819b8680cdea4c57fe90d" };
+        console.log(queryURL + "lat=" + lat + "&" + "lon=" + lon + "&" + $.param(queryParams) + "&units=imperial" );
+        return (queryURL + "lat=" + lat + "&" + "lon=" + lon + "&" + $.param(queryParams) + "&units=imperial");
+
+    }
+
+
     //get the uv index value based off lat and lon of the city searched
-    function buildQueryUVIndexURL(lat,lon) {
+    function buildQueryUVIndexURL(lat, lon) {
         // query is the url we'll use to query the API
         var queryUVIndexURL = "http://api.openweathermap.org/data/2.5/uvi?";
         // Begin building an object to contain our API call's query parameters
         // Set the API key
         var queryParams = { "appid": "b2d4239aa3e819b8680cdea4c57fe90d" };
 
-        console.log(queryUVIndexURL + "lat=" + lat + "&" + "lon=" + lon  + "&" + $.param(queryParams));
-        return (queryUVIndexURL + "lat=" + lat + "&" + "lon=" + lon  + "&" + $.param(queryParams));
-  
+        console.log(queryUVIndexURL + "lat=" + lat + "&" + "lon=" + lon + "&" + $.param(queryParams));
+        return (queryUVIndexURL + "lat=" + lat + "&" + "lon=" + lon + "&" + $.param(queryParams));
+
     }
 
-    //WORKS 
+    //deprecated, deleted search button
     $("#search").on("click", ".fa-search", function (event) {
         // This line allows us to take advantage of the HTML "submit" property
         console.log(event);
+
         //prevents reloading of page by pressing enter
         event.preventDefault();
 
@@ -73,26 +116,32 @@ $(document).ready(function () {
 
     });
 
-     //use the enter key to input event
-     $("#searchText").on("keypress", function (event) {
+    //use the enter key to input event
+    $("#searchText").on("keypress", function (event) {
         if (event.keyCode === 13) {
-            
-        // This line allows us to take advantage of the HTML "submit" property
-        console.log(event);
-        event.preventDefault();
-        // clear the forecast area to populate a new one
-        clear();
 
-        // Build the query URL for the ajax request to the Open weather API
-        var queryURL = buildQueryURL();
-        //var queryForecastURL = buildQueryForecastURL();
+            // This line allows us to take advantage of the HTML "submit" property
+            console.log(event);
+            event.preventDefault();
+            // clear the forecast area to populate a new one
+            clear();
 
-        // Make the AJAX request to the API - GETs the JSON data at the queryURL.
-        // The data then gets passed as an argument to the updatePage function
-        $.ajax({
-            url: queryURL,
-            method: "GET"
-        }).then(updatePage);
+            // Build the query URL for the ajax request to the Open weather API
+            var queryURL = buildQueryURL();
+            //var queryForecastURL = buildQueryForecastURL();
+
+
+            // Make the AJAX request to the API - GETs the JSON data at the queryURL.
+            // The data then gets passed as an argument to the updatePage function
+            $.ajax({
+                url: queryURL,
+                method: "GET"
+            }).then(updatePage);
+
+            //clear the search bar
+            console.log("clearing search bar")
+            // $("#searchText").empty();
+            $("#searchText").val("");
         }
     });
 
@@ -113,7 +162,7 @@ $(document).ready(function () {
 
         //create the forecast div here
         var cityName = OpenWeatherData.name;
-        
+
         //time variables
         var currentDate = new Date(OpenWeatherData.dt).toLocaleDateString();
         console.log(currentDate);
@@ -129,15 +178,17 @@ $(document).ready(function () {
         var temperature = OpenWeatherData.main.temp;
         var humidity = OpenWeatherData.main.humidity;
         var windSpeed = OpenWeatherData.wind.speed;
-        var uvIndex ;
+        var uvIndex;
 
-        
+        //clear the input field
+        $("#searchText").empty();
+
 
         //test console
         console.log(OpenWeatherData.name); //works
         console.log(weatherDescription);
-        
         console.log("UV DAta " + uvIndex);
+
         //update the time 
         var currentTime = moment().format("dddd, MMMM Do YYYY, h:mm a")
         //append city name to header
@@ -159,12 +210,12 @@ $(document).ready(function () {
         $.ajax({
             url: uvIndexURL,
             method: "GET"
-        }).then (function (UVdata){
+        }).then(function (UVdata) {
             console.log(UVdata);
             uvIndex = UVdata.value;
             var ptag = $("<p>").text("UV Index: ");
             var UVbutton = $("<span>").addClass("btn").text(uvIndex);
-            if (uvIndex < 3 ) {
+            if (uvIndex < 3) {
                 UVbutton.addClass("btn-success")
             }
             else if (uvIndex < 7) {
@@ -177,11 +228,11 @@ $(document).ready(function () {
 
             $("#forecast").append(ptag.append(UVbutton));
         });
-        
+
 
         var queryForecastURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=current,minutely,hourly&appid=b2d4239aa3e819b8680cdea4c57fe90d";
         console.log(queryForecastURL);
-        
+
         //create the 5 day forecast
 
 
@@ -203,7 +254,7 @@ $(document).ready(function () {
 
                 // change the bg color
                 $("#weeklyForecast").append(h3);
-                $("#weeklyForecast").attr("style","background-color: lightsteelblue;")
+                $("#weeklyForecast").attr("style", "background-color: lightsteelblue;")
 
 
                 // run 5 times for forecast
@@ -237,7 +288,7 @@ $(document).ready(function () {
         forecast();
     }
 
-    
+
     // when clicking search button, use clear function
     $("#search").on("click", clear);
 
