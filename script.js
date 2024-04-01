@@ -202,9 +202,9 @@ $(document).ready(function () {
         $("#forecast").append("<p>Conditions: " + weatherDescription + "</p>");
         $("#forecast").append(icon);
 
-        $("#forecast").append("<p>Temperature: " + temperature + "</p>");
-        $("#forecast").append("<p>Humidity: " + humidity + "</p>");
-        $("#forecast").append("<p>Windspeed: " + windSpeed + "</p>");
+        $("#forecast").append("<p>Temperature: " + temperature + " °F</p>");
+        $("#forecast").append("<p>Humidity: " + humidity + " %</p>");
+        $("#forecast").append("<p>Windspeed: " + windSpeed + " mph</p>");
         // get UV index
         var uvIndexURL = buildQueryUVIndexURL(lat, lon);
         $.ajax({
@@ -230,24 +230,24 @@ $(document).ready(function () {
         });
 
 
-        var queryForecastURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=current,minutely,hourly&appid=b2d4239aa3e819b8680cdea4c57fe90d";
+        var queryForecastURL = "https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&exclude=current,minutely,hourly&appid=b2d4239aa3e819b8680cdea4c57fe90d";
         console.log(queryForecastURL);
 
+
         //create the 5 day forecast
-
-
         //Works
         function forecast() {
             $.ajax({
-                url: "https://corsproxy.io/?'api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=current,minutely,hourly&units=imperial&cnt=5&appid=b2d4239aa3e819b8680cdea4c57fe90d",
+                // url: "https://corsproxy.io/?'api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&exclude=current,minutely,hourly&units=imperial&cnt=5&appid=b2d4239aa3e819b8680cdea4c57fe90d",
+                url: "https://corsproxy.io/?https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&units=imperial&appid=b2d4239aa3e819b8680cdea4c57fe90d",
                 method: "GET"
             }).then(function (response) {
                 // console.log the response
                 console.log("5 day forecast ");
                 console.log(response);
 
-                console.log("resonse daily");
-                console.log(response.daily);
+                console.log("resonse list");
+                console.log(response.list);
 
                 // append title weekly forecast
                 var h3 = $("<h3>Weekly Forecast</h3>").addClass("row col-md-12");
@@ -260,12 +260,14 @@ $(document).ready(function () {
                 // run 5 times for forecast
                 for (var i = 0; i < 5; i++) {
 
-                    console.log(response.daily[i].humidity);
-                    var humidity = response.daily[i].humidity
-                    var temp = response.daily[i].temp.day;
-                    var date = moment.unix(response.daily[i].dt).format('YYYY-MM-DD');
-                    var weatherIcon = response.daily[i].weather[0].icon;
-                    console.log("humidity" + humidity);
+                    console.log("humidity = " + response.list[i].main.humidity);
+                    var humidity = response.list[i].main.humidity
+                    console.log("temp = " + response.list[i].main.temp);
+                    var temp = response.list[i].main.temp;
+                    console.log("date = " + response.list[i].dt);
+                    var date = moment.unix(response.list[i].dt).format('YYYY-MM-DD');
+                    var weatherIcon = response.list[i].weather[0].icon;
+                    // console.log("humidity" + humidity);
 
                     // create icon img tag and link with icon from object
                     var icon = $("<img>");//create icon var
